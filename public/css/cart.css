@@ -1,0 +1,12 @@
+.pos{
+    /* background-color: aquamarine; */
+    width: 90px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 60px;
+    /* flex-direction: column; */
+    gap: 3px;
+    }
+    
