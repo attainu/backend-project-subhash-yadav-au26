@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/adminall.css">
+</head>
+<body>
+    <table>
+        <caption>User Details</caption>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone No.</th>
+            <th scope="col">Role</th>
+            <th scope="col">Photo</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            <%for (var i=0; i<users.length; i++){%>
+
+                <tr>
+                    <td data-label="Account"><%=users[i].name  %> </td>
+                    <td data-label="Due Date"><%=users[i].email  %> </td>
+                    <td data-label="Amount"><%=users[i].phoneNo  %></td>
+                    <td data-label="Period"><%=users[i].role  %> </td>
+                    <td data-label="Period"><%=users[i].photo.id  %></td>
+                    <td>
+                        <a href="/api/v1/admin/user/<%=users[i]._id  %>  "><button>Delete</button></a>
+                        <a href="/api/v1/admin/user/?id=<%=users[i]._id  %> "><button>Update</button></a>
+    
+                    </td>
+                </tr>
+
+            <%}%>
+
+        </tbody>
+      </table>
+      <button>back</button>
+</body>
+</html>

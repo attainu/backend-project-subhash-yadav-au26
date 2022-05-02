@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/adminall.css">
+</head>
+<body>
+    <table>
+        <caption>User Details</caption>
+        <thead>
+          <tr>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Photo</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            <%for (var i=0; i<products.length; i++){%>
+
+                <tr>
+                    <td data-label="Account"><%=products[i].name  %> </td>
+                    <td data-label="Due Date"><%=products[i].price  %> </td>
+                    <td data-label="Amount"><%=products[i].description  %></td>
+                    <td data-label="Period"><%=products[i].ratings  %> </td>
+                    <td data-label="Period"><%=products[i].photo.id  %></td>
+                    <td>
+                        <a href="/api/v1/admin/user/<%=products[i]._id  %>  "><button>Delete</button></a>
+                        <a href="/api/v1/admin/product/<%=products[i]._id  %> "><button>Update</button></a>
+                    </td>
+                </tr>
+
+            <%}%>
+
+        </tbody>
+      </table>
+      <a href="/api/v1/userdashboard">
+        <button type="submit" class="btn btn-success ">back</button>
+      </a>
+</body>
+</html>

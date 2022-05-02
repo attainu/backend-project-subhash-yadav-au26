@@ -1,0 +1,273 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container{
+    /* height: 100vh; */
+    width: 100wh;
+    background-color:rgb(252, 252, 252) ;
+}
+.header{
+    width: 100wh;
+    height: 68vh;
+    /* background-color: red; */
+    background-image: url('../img/bg.avif')
+}
+.nav{
+    /* background-color: green; */
+    height: 10vh;
+}
+
+.box{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    
+}
+.right{
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.left{
+    margin-top: 20px;
+}
+
+.left h1{
+    color: white;
+}
+
+.right li{
+    list-style: none;
+    color: white;
+    font-size: large;
+    font-weight: 300;
+}
+
+.center-search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 18vh;
+}
+.search{
+    width:68vw;
+    height: 18vh;
+    /* background-color: blueviolet; */
+    text-align: center;
+
+}
+
+.search h1,.search p{
+    color: white;
+}
+
+.search h1{
+    font-weight: 600;
+    font-size:50px;
+}
+
+.search p{
+    font-size: 50px;
+}
+
+#searchfood{
+    width: 66vw;
+    height: 8vh;
+    border-radius: 8px;
+    text-align: center;
+    font-size: large;
+}
+/* end header part */
+
+.sub-container{
+    display: flex;
+    justify-content: space-around;
+    /* background-color: aqua; */
+    margin-top: 30px;
+    height: 40vh;
+}
+.party{
+    display: flex;
+    column-gap: 10px;
+    /* background-color: yellow; */
+    justify-content: space-around;
+    
+}
+.box1{
+    width: 18vw;
+    /* height: 38vh; */
+    border: 1px solid black;
+    /* background-color:pink; */
+    border-radius: 10px;
+    /* flex-direction: column; */
+    transition: transform .5s;
+}
+
+.box1:hover{
+    transform: scale(1.1);
+}
+.img{
+    /* background-color: orange; */
+    height: 30vh;
+    width: 18vw;
+    overflow: hidden;
+    /* border: 1px solid black; */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.title{
+    background-color: white;
+    height: 9vh;
+    overflow: hidden;
+}
+.title p{
+    padding: 20px;
+    text-align: center;
+    font-size: large;
+    font-weight: 600;
+}
+.img img{
+    width: 18vw;
+    height: 30vh;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* 1st 4 box  end*/
+
+.collections{
+    display: flex;
+    justify-content: space-around;
+    /* background-color: olivedrab; */
+    margin-top: 20px;
+}
+.col-box{
+    /* background-color: red; */
+    height:58vh ;
+}
+
+.collection-text{
+    height:12vh;
+}
+
+.collection-box{
+    display: flex;
+    column-gap: 10px;
+}
+
+.live{
+    height: 46vh;
+    width: 18vw;
+    border-radius: 8px;
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+
+}
+
+.live-img{
+    overflow: hidden;
+    z-index: 0;
+    height: 46vh;
+    width: 18vw;
+    /* background-color: yellow; */
+    position: absolute;
+}
+
+.live-img img{
+    border-radius: 8px;
+}
+
+.live-text{
+    position: absolute;
+    bottom: 0;
+    z-index: 5;
+    left: 20px;
+}
+
+.live-text p{
+    font-size: larger;
+    font-weight: 600;
+    color: white;
+}
+
+/* end */
+
+.restaurant{
+    /* background-color: brown; */
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.res-box{
+    display: flex;
+    /* border: 1px solid black; */
+    width: 75vw;
+    flex-direction: column;
+   
+}
+.res-list{
+    display: flex;
+    column-gap: 10vw;
+}
+.header-res{
+    margin-bottom: 15px;
+}
+
+.list-1 p{
+    padding: 8px;
+}
+
+/* end */
+
+.footer-container{
+    background-color:rgb(248, 248, 248);
+    display:flex ;
+    justify-content: space-around;
+}
+.foot{
+    display:flex;
+    flex-direction: column;
+    /* background-color: red; */
+    width: 75vw;
+    height: 40vh;
+    margin-top: 20px;
+}
+.footer-data{
+    display: flex;
+    flex-direction: row;
+}
+.log-container{
+    /* border: 1px solid green; */
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.data{
+    display: flex;
+    column-gap: 60px;
+
+}
+.data-list p{
+    padding: 8px;
+}
+.footer-title{
+    margin-top: 10px;
+    border-top: 1px solid rgb(120, 112, 112);
+    /* background-color: blue; */
+}
+.footer-title p{
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+.social i{
+    margin-top: 10px;
+    margin-left: 8px;
+   font-size: large;
+
+}
