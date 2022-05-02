@@ -211,7 +211,7 @@ exports.changePassword = bigPromise(async(req, res) => {
 
 exports.getchangePassword = (req,res)=>{
     let msg =''
-    res.render('changePassword',{
+    res.render('changepassword',{
         msg
     })
 }
@@ -349,6 +349,10 @@ exports.adminDeleteOneUser = bigPromise(async(req, res) => {
     })
 
 })
+
+
+
+
 
 // manager
 exports.managerAllUser = bigPromise(async(req, res) => {
