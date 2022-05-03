@@ -17,6 +17,7 @@ app.use(fileUpload({
 }));
 
 app.use(express.static('public'))
+app.use(express.static('image'))
 
 
 // ejs
@@ -76,19 +77,11 @@ app.get('/update',(req,res)=>{
 })
 
 
-app.get('/food',(req,res)=>{
-    
-})
 
 app.get('/cart',(req,res)=>{
 
     res.render('cart')
 })
-
-
-
-
-
 
 
 

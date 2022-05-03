@@ -2,7 +2,9 @@ const User = require('../models/user');
 const bigPromise = require('../middlewares/bigPromise')
 const fileUpload = require('express-fileupload')
 const cloudinary = require('cloudinary').v2
+const axios = require('axios')
 const crypto = require('crypto');
+
 
 
 // cookieToken
@@ -10,11 +12,12 @@ const cookieToken = require('../utils/cookieToken');
 
 // email
 const sendemail = require('../utils/sendemail');
-const { default: axios } = require('axios');
+
 
 
 
 exports.signup = bigPromise(async(req, res, next) => {
+
     if (!req.files) {
         return res.status(400).send('photo is required')
             // return next(new CustomError("photo is required", 400));
@@ -23,6 +26,7 @@ exports.signup = bigPromise(async(req, res, next) => {
     let result;
     if (req.files) {
         let file = req.files.photo
+        console.log(req.files)
         result = await cloudinary.uploader.upload(file.tempFilePath, {
             folder: "FOOD-SANTA",
             width: 150,
@@ -103,6 +107,7 @@ exports.logout = bigPromise(async(req, res) => {
     res.redirect('/')
 })
 
+
 exports.getpasswordReset=(req,res)=>{
     res.render('updatepassword')
 }
@@ -165,6 +170,8 @@ exports.passwordReset = bigPromise(async(req, res) => {
 
     res.redirect('/')
 });
+
+
 
 exports.getLoggedInUserDetails = bigPromise(async(req, res) => {
 
@@ -269,13 +276,8 @@ exports.getupdateProfile = async(req,res)=>{
 
 
 
-
-
-
-
 exports.adminAllUser = bigPromise(async(req, res) => {
     const users = await User.find()
-    console.log(users)
     res.render('adminallUser',{
         users
     })
@@ -288,11 +290,38 @@ exports.adminGetSingleUser = bigPromise(async(req, res) => {
         res.status(400).send('User not found')
     }
     res.status(200).json({
-        success: true,
         user
     })
 
 })
+
+
+
+exports.getupdateByadmin=async(req,res)=>{
+ try {
+    const id = req.query.id
+    console.log(id)
+    let user =''
+    axios.get(`http://localhost:4000/api/v1/admin/user/${id}`)
+    .then((response)=>{
+        user=response.data
+        res.render('adminuserupdate',{
+            user
+        })
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+
+
+} catch (error) {
+    res.send(error)
+}
+    
+   
+}
+
+
 
 exports.adminUpdateOneUser = bigPromise(async(req, res) => {
 
@@ -311,25 +340,7 @@ exports.adminUpdateOneUser = bigPromise(async(req, res) => {
 })
 
 
-exports.getupdateByadmin=bigPromise(async(req,res)=>{
-    try {
-        const id = req.query.id
-        const url =`http://localhost:4000/api/v1/admin/user/${id}`
-        axios.get(url).then((data)=>{
-            console.log(data.data)
-            let user = data.data
-           return res.render('adminuserupdate',{
-                user
-            })
-        })
-        
-        .catch((err)=>console.log(err))
-        
-        
-    } catch (err) {
-        res.send(err)
-    }
-})
+
 
 
 

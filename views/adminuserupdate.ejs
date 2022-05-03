@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>User-Update</title>
     <!-- CSS only -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -35,13 +35,13 @@
 
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value="<%=user.user.email  %>  ">
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" value=" <%=user.user.email  %> ">
             </div>
 
          
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Role</label>
-              <input type="text" class="form-control" id="exampleInputPassword1" name="role"  value="<%=user.user.role  %> ">
+              <input type="text" class="form-control" id="exampleInputPassword1" name="role"  value="<%=user.user.role  %>">
             </div>
 
             <div class="text-center">
@@ -61,40 +61,30 @@
       event.preventDefault()
       var unindexed_array = $("#update-user").serializeArray()
       let data ={};
+      // store data in one object
       $.map(unindexed_array,function(n,i){
         data[n['name']] = n['value']
-        data={...n}
       })
 
+      console.log(data)
+      const QueryString = window.location.href;
+      let url = new URL(QueryString)
+      let search = url.searchParams
+      let valueSearch = search.get('id')
 
+      
       let request ={
-        'url':`http://localhost:4000/api/v1/admin/user/${data._id}`,
+        'url':`http://localhost:4000/api/v1/admin/user/${valueSearch}`,
         'method':'put',
         'data':data
       }
 
       $.ajax(request).done(function(){
         alert("data updated successfully")
+        location.reload()
       })
 
     })
-    console.log(window.location.pathname)
-
-    // if (window.location.pathname=='http://localhost:4000/api/v1/admin/users'){
-    //   $ondelete = $(".table tbody td a.delete")
-    //   $ondelete.click(function(event){
-    //     var id = $(this).attr('data-id')
-    //     let request ={
-    //     'url':`http://localhost:4000/api/v1/admin/user/${id}`,
-    //     'method':'delete'
-    //   }
-    //   if(confirm('do you want delete ')){
-    //     $.ajax(request).done(function(){
-    //     alert("data delete successfully")
-        
-    //   })
-    //   }
-    //   })
-    // }
+   
   </script>
 </html>

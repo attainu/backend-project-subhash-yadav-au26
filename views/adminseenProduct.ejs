@@ -4,12 +4,56 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Product</title>
     <link rel="stylesheet" href="/css/adminall.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <style>
+    .btn ,.button-5{
+      align-items: center;
+  background-clip: padding-box;
+  background-color: #fa6400;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+  text-decoration: none;
+  }
+  .button-5{
+    background-color:rgb(39, 206, 39)
+  }
+  .btn-success {
+    background-color:rgb(63, 63, 242)
+
+  }
+  </style>
+
+
+
+
+
 </head>
-<body>
+<body style="background-image:url('/img/bg.avif')">
     <table>
-        <caption>User Details</caption>
+        <caption style="color:white; font-weight:bold;">Product List</caption>
         <thead>
           <tr>
             <th scope="col">Product Name</th>
@@ -28,10 +72,17 @@
                     <td data-label="Due Date"><%=products[i].price  %> </td>
                     <td data-label="Amount"><%=products[i].description  %></td>
                     <td data-label="Period"><%=products[i].ratings  %> </td>
-                    <td data-label="Period"><%=products[i].photo.id  %></td>
+                    <td data-label="Period">
+                      <img src="<%=products[i].photo.secure_url  %>" alt="" srcset="" style="border-radius: 50%; height: 80px; width: 80px">
+                    </td>
                     <td>
-                        <a href="/api/v1/admin/user/<%=products[i]._id  %>  "><button>Delete</button></a>
-                        <a href="/api/v1/admin/product/<%=products[i]._id  %> "><button>Update</button></a>
+                      <a href="/api/v1/admin/product?id=<%=products[i]._id  %>">
+                        <button  class="button-5">update</button>
+                      </a>
+
+                        <a class= "delete" data-id=<%=products[i]._id  %>>
+                          <button class="btn">delete</button>
+                        </a>
                     </td>
                 </tr>
 
@@ -39,8 +90,25 @@
 
         </tbody>
       </table>
-      <a href="/api/v1/userdashboard">
-        <button type="submit" class="btn btn-success ">back</button>
-      </a>
+
+      <script>
+      if (window.location.pathname == '/api/v1/admin/products'){
+        $ondelete = $("table tbody td a.delete")
+        $ondelete.click(function(event){
+        var id = $(this).attr('data-id')
+        console.log(id)
+        let request ={
+        'url':`http://localhost:4000/api/v1/admin/product/${id}`,
+        'method':'delete'
+      }
+      if(confirm('do you want delete ')){
+        $.ajax(request).done(function(){
+        alert("data delete successfully")
+        location.reload()
+        })
+      }
+      })
+    }
+      </script>
 </body>
 </html>

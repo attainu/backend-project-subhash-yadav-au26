@@ -1,10 +1,30 @@
 const express = require('express')
 const router = express.Router()
-const { signup, login, logout, forgotPassword, passwordReset, getpasswordReset,getLoggedInUserDetails, changePassword,getchangePassword,getupdateProfile, updateUserDetails, adminAllUser, managerAllUser, adminGetSingleUser, adminUpdateOneUser, adminDeleteOneUser, getupdateByadmin} = require('../controllers/user.controller')
+const upload = require('../multer')
+const {
+     signup, 
+     login, 
+     logout, 
+     forgotPassword,
+      passwordReset, 
+      getpasswordReset,
+      getLoggedInUserDetails,
+       changePassword,
+       getchangePassword,
+       getupdateProfile, 
+       updateUserDetails,
+        adminAllUser,
+         managerAllUser, 
+         adminUpdateOneUser, 
+         adminDeleteOneUser, 
+         getupdateByadmin,
+         adminGetSingleUser
+        } = require('../controllers/user.controller')
 
 const { isLoggedIn, customRole } = require('../middlewares/user')
 
 router.route('/signup').post(signup);
+// router.post('/signup',upload.single('photo'),signup)
 
 router.route('/login').post(login);
 
@@ -24,22 +44,13 @@ router.route('/userdashboard/update').post(isLoggedIn, updateUserDetails).get(is
 // admin
 router.route('/admin/users').get(isLoggedIn, customRole('admin'), adminAllUser);
 
-router.route('/admin/user/:id').get(adminGetSingleUser);
-
+router.route('/admin/user/:id').get( adminGetSingleUser);
 router.route('/admin/user/:id').put(isLoggedIn, customRole('admin'), adminUpdateOneUser);
 
 router.route('/admin/user/:id').delete(isLoggedIn, customRole('admin'), adminDeleteOneUser)
 
 
 router.route('/admin/user').get(isLoggedIn,customRole('admin'),getupdateByadmin) 
-
-
-
-
-
-
-
-
 
 
 

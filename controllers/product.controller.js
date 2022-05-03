@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Product = require('../models/product');
 const WhereClause = require("../utils/whereClause");
 const cloudinary = require('cloudinary').v2
+const axios = require('axios')
 exports.testProduct = bigPromise(async(req, res) => {
     res.status(200).json({
         success: true,
@@ -36,12 +37,11 @@ exports.addProduct = bigPromise(async(req, res, next) => {
             crop: "scale"
         })
     }
-    const {name , price ,description,ratings} = req.body
+    const {name , price ,description} = req.body
     const product = await Product.create({
         name,
         price,
         description,
-        ratings,
         photo: {
             id: result.public_id,
             secure_url: result.secure_url
@@ -71,10 +71,14 @@ exports.getAllProduct = bigPromise(async(req, res, next) => {
     products = await productsObj.base.clone()
 
 
-    // const user = await User.findById(req.user.id)
-    // console.log(req.user.id)
+    user={
+        name:req.user.name,
+        photo:req.user.photo.secure_url
+    }
+    console.log(user)
     res.render('food',{
-        products
+        products,
+        user
     })
 })
 
@@ -95,6 +99,7 @@ exports.getOneProduct = bigPromise(async(req, res, next) => {
 // admin
 exports.adminGetallProduct = bigPromise(async(req, res, next) => {
     const products = await Product.find()
+    console.log(products.length)
     if (!products) {
         res.status(400).send('No product found')
     }
@@ -103,6 +108,41 @@ exports.adminGetallProduct = bigPromise(async(req, res, next) => {
         products
     })
 })
+
+exports.adminupdateProductPage = async(req,res)=>{
+    try {
+
+        const id = req.query.id
+        console.log(id)
+        await axios.get(`http://localhost:4000/api/v1/admin/product/${id}`)
+        .then((response)=>{
+            let product = response.data
+            res.render('updateproduct',{
+                product
+            })
+            
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+
+    } catch (error) {
+        res.send(error)
+    }
+
+}
+
+exports.adminGetOneProduct= bigPromise(async(req, res, next) => {
+
+    let product = await Product.findById(req.params.id);
+    if (!product) {
+        return res.status(401).send('Product not found')
+    }
+    res.send(product)
+   
+
+})
+
 
 exports.adminUpdateOneProduct = bigPromise(async(req, res, next) => {
     let msg = 'product updated'
@@ -139,32 +179,17 @@ exports.adminUpdateOneProduct = bigPromise(async(req, res, next) => {
 
 })
 
-exports.adminGetOneProduct= bigPromise(async(req, res, next) => {
 
-    let product = await Product.findById(req.params.id);
-    if (!product) {
-        return res.status(401).send('Product not found')
-    }
-    let msg = ''
-    res.render('adminOneProduct',{
-        product,
-        msg
-    })
-   
-
-})
 
 exports.adminDeleteOneProduct = bigPromise(async(req, res, next) => {
     let product = await Product.findById(req.params.id);
     if (!product) {
         return res.status(401).send('Product not found')
     }
-    // rdestroy images
-    for (let index = 0; index < product.photos.length; index++) {
-        const res = await cloudinary.uploader.destroy(product.photos[index].id)
-    }
+   
+    const imageId = product.photo.id
+    await cloudinary.uploader.destroy(imageId);
     await product.remove()
-
     res.status(200).json({
         success: true,
         message: 'Product deleted'
