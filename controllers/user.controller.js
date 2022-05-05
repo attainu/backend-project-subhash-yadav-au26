@@ -2,7 +2,10 @@ const User = require('../models/user');
 const bigPromise = require('../middlewares/bigPromise')
 const fileUpload = require('express-fileupload')
 const cloudinary = require('cloudinary').v2
+const axios = require('axios')
 const crypto = require('crypto');
+const fs = require('fs')
+
 
 
 // cookieToken
@@ -10,24 +13,27 @@ const cookieToken = require('../utils/cookieToken');
 
 // email
 const sendemail = require('../utils/sendemail');
-const { default: axios } = require('axios');
+
 
 
 
 exports.signup = bigPromise(async(req, res, next) => {
-    if (!req.files) {
+    // console.log(req.file)
+    if (!req.file) {
         return res.status(400).send('photo is required')
             // return next(new CustomError("photo is required", 400));
     }
 
     let result;
-    if (req.files) {
-        let file = req.files.photo
-        result = await cloudinary.uploader.upload(file.tempFilePath, {
+    if (req.file) {
+        let file = req.file.path
+        console.log(req.file)
+        result = await cloudinary.uploader.upload(file, {
             folder: "FOOD-SANTA",
             width: 150,
             crop: "scale"
         })
+        fs.unlinkSync(file)
     }
 
 
@@ -103,6 +109,7 @@ exports.logout = bigPromise(async(req, res) => {
     res.redirect('/')
 })
 
+
 exports.getpasswordReset=(req,res)=>{
     res.render('updatepassword')
 }
@@ -166,6 +173,8 @@ exports.passwordReset = bigPromise(async(req, res) => {
     res.redirect('/')
 });
 
+
+
 exports.getLoggedInUserDetails = bigPromise(async(req, res) => {
 
     const user = await User.findById(req.user.id)
@@ -211,7 +220,7 @@ exports.changePassword = bigPromise(async(req, res) => {
 
 exports.getchangePassword = (req,res)=>{
     let msg =''
-    res.render('changePassword',{
+    res.render('changepassword',{
         msg
     })
 }
@@ -220,21 +229,22 @@ exports.getchangePassword = (req,res)=>{
 
 
 exports.updateUserDetails = bigPromise(async(req, res) => {
-    console.log(req.body)
+
     if (!(req.body.name || req.body.email)) {
         res.status(400).send('Please enter email and name')
     }
     const userId = req.user.id;
     const data = { name: req.body.name, email: req.body.email ,phoneNo:req.body.phoneNo};
-    if (req.files) {
+    if (req.file) {
         const user = await User.findById(userId)
         const imageId = user.photo.id
         const respo = await cloudinary.uploader.destroy(imageId);
-        const result = await cloudinary.uploader.upload(req.files.photo.tempFilePath, {
+        const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "FOOD-SANTA",
             width: 150,
             crop: "scale"
         })
+        fs.unlinkSync(req.file.path)
         data.photo = {
             id: result.public_id,
             secure_url: result.secure_url
@@ -248,7 +258,7 @@ exports.updateUserDetails = bigPromise(async(req, res) => {
     console.log(user)
     let msg = 'profile updated'
     
-    res.status(200).render('updateProfile',{
+    res.status(200).render('updateprofile',{
         user,
         msg
     })
@@ -269,13 +279,8 @@ exports.getupdateProfile = async(req,res)=>{
 
 
 
-
-
-
-
 exports.adminAllUser = bigPromise(async(req, res) => {
     const users = await User.find()
-    console.log(users)
     res.render('adminallUser',{
         users
     })
@@ -288,11 +293,44 @@ exports.adminGetSingleUser = bigPromise(async(req, res) => {
         res.status(400).send('User not found')
     }
     res.status(200).json({
-        success: true,
         user
     })
 
 })
+
+
+
+exports.getupdateByadmin=async(req,res)=>{
+ try {
+    const id = req.query.id
+    console.log(id)
+    let user =''
+    let p={
+        proto:req.protocol,
+        host:req.get('host'),
+    }
+    console.log(p)
+    // `${req.protocol}://${req.get("host")}/api/v1/password/reset/${forgotToken}`
+    axios.get(`${req.protocol}://${req.get('host')}/api/v1/admin/user/${id}`)
+    .then((response)=>{
+        user=response.data
+        res.render('adminuserupdate',{
+            user
+        })
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+
+
+} catch (error) {
+    res.send(error)
+}
+    
+   
+}
+
+
 
 exports.adminUpdateOneUser = bigPromise(async(req, res) => {
 
@@ -311,11 +349,7 @@ exports.adminUpdateOneUser = bigPromise(async(req, res) => {
 })
 
 
-exports.getupdateByadmin=async(req,res)=>{
-    const data = await axios.get('http://localhost:4000/api/v1/admin/user',{params:{id:req.query.id}})
-    console.log(data)
-    res.render('adminuserupdate')
-}
+
 
 
 
@@ -335,6 +369,10 @@ exports.adminDeleteOneUser = bigPromise(async(req, res) => {
     })
 
 })
+
+
+
+
 
 // manager
 exports.managerAllUser = bigPromise(async(req, res) => {

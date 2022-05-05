@@ -2,7 +2,7 @@
 
 const { json } = require("express");
 
-// api/v1/product?search=coder&page=2&catoegory=shortsleves&rating[gte]=4
+// api/v1/products?search=coder&page=2&catoegory=shortsleves&rating[gte]=4
 // &price[lte]=999&price[gte]=199
 
 //rating:{$gte:'4'}

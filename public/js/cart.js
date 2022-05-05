@@ -30,16 +30,22 @@ if (document.readyState == "loading") {
   
     (function retriveItem(){
       const productItem = document.getElementsByClassName('cartItem')[0]
-      let cartRow = document.createElement('tr')
-      cartRow.classList.add('border-0')
-      cartRow.classList.add('cart-row')
+      console.log(productItem)
+      
     
       let Item = localStorage.getItem('product')
       Item = JSON.parse(Item)
+
+      // console.log(Item)
      
       if(Item.length>0){
-        for (var i=0 ; i<Item.length; i++){
+        for(var i=0 ; i<Item.length; i++){
+          let cartRow = document.createElement('tr')
+          cartRow.classList.add('border-0')
+          cartRow.classList.add('cart-row')
           console.log(Item[i])
+         
+
           let itemContent=`
           
           <td>
@@ -77,14 +83,14 @@ if (document.readyState == "loading") {
           `
           cartRow.innerHTML=itemContent
           productItem.append(cartRow)
+
           cartRow.getElementsByClassName('btn-danger')[0].addEventListener('click',removeCartItem)
       
           cartRow.getElementsByClassName('cart-quantity-input')[0].addEventListener('change',quantityChange)
           console.log(i)
         }
         updateCartTotal()
-        console.log(productItem)
-  
+
       }
     
       

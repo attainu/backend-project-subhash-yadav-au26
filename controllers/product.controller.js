@@ -4,6 +4,8 @@ const User = require('../models/user');
 const Product = require('../models/product');
 const WhereClause = require("../utils/whereClause");
 const cloudinary = require('cloudinary').v2
+const axios = require('axios')
+const fs = require('fs')
 exports.testProduct = bigPromise(async(req, res) => {
     res.status(200).json({
         success: true,
@@ -19,29 +21,28 @@ exports.getProduct = (req,res)=>{
 }
 
 
-
 exports.addProduct = bigPromise(async(req, res, next) => {
     let msg = 'product is added'
-    if (!req.files) {
+    if (!req.file) {
         return res.status(400).send('photo is required')
            
     }
 
     let result;
-    if (req.files) {
-        let file = req.files.photo
-        result = await cloudinary.uploader.upload(file.tempFilePath, {
+    if (req.file) {
+        let file = req.file.path
+        result = await cloudinary.uploader.upload(file, {
             folder: "FOOD-SANTA",
             width: 150,
             crop: "scale"
         })
+        fs.unlinkSync(file)
     }
-    const {name , price ,description,ratings} = req.body
+    const {name , price ,description} = req.body
     const product = await Product.create({
         name,
         price,
         description,
-        ratings,
         photo: {
             id: result.public_id,
             secure_url: result.secure_url
@@ -57,7 +58,7 @@ exports.addProduct = bigPromise(async(req, res, next) => {
 
 
 exports.getAllProduct = bigPromise(async(req, res, next) => {
-    const resultperPage = 6;
+    const resultperPage = 8;
     const totalCountProduct = await Product.countDocuments();
 
 
@@ -71,10 +72,14 @@ exports.getAllProduct = bigPromise(async(req, res, next) => {
     products = await productsObj.base.clone()
 
 
-    // const user = await User.findById(req.user.id)
-    // console.log(req.user.id)
+    user={
+        name:req.user.name,
+        photo:req.user.photo.secure_url
+    }
+    console.log(user)
     res.render('food',{
-        products
+        products,
+        user
     })
 })
 
@@ -95,6 +100,7 @@ exports.getOneProduct = bigPromise(async(req, res, next) => {
 // admin
 exports.adminGetallProduct = bigPromise(async(req, res, next) => {
     const products = await Product.find()
+    console.log(products.length)
     if (!products) {
         res.status(400).send('No product found')
     }
@@ -104,40 +110,29 @@ exports.adminGetallProduct = bigPromise(async(req, res, next) => {
     })
 })
 
-exports.adminUpdateOneProduct = bigPromise(async(req, res, next) => {
-    let msg = 'product updated'
-    let product = await Product.findById(req.params.id);
-    if (!product) {
-        return res.status(401).send('Product not found')
-    }
+exports.adminupdateProductPage = async(req,res)=>{
+    try {
 
-    if (req.files) {
-        const imageId = product.photo.id
-        const respo = await cloudinary.uploader.destroy(imageId);
-        const result = await cloudinary.uploader.upload(req.files.photo.tempFilePath, {
-            folder: "FOOD-SANTA",
-            width: 150,
-            crop: "scale"
+        const id = req.query.id
+        console.log(id)
+        // `${req.protocol}://${req.get("host")}/api/v1/password/reset/${forgotToken}`
+        await axios.get(`${req.protocol}://${req.get("host")}/api/v1/admin/product/${id}`)
+        .then((response)=>{
+            let product = response.data
+            res.render('updateproduct',{
+                product
+            })
+            
         })
-        product.photo = {
-            id: result.public_id,
-            secure_url: result.secure_url
-        }
+        .catch((err)=>{
+            console.log(err)
+        })
+
+    } catch (error) {
+        res.send(error)
     }
 
-
-    product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    })
-
-
-    res.render('adminOneProduct',{
-        product,
-        msg
-    })
-
-})
+}
 
 exports.adminGetOneProduct= bigPromise(async(req, res, next) => {
 
@@ -145,31 +140,137 @@ exports.adminGetOneProduct= bigPromise(async(req, res, next) => {
     if (!product) {
         return res.status(401).send('Product not found')
     }
-    let msg = ''
-    res.render('adminOneProduct',{
-        product,
-        msg
-    })
+    res.send(product)
    
 
 })
+
+
+exports.adminUpdateOneProduct = bigPromise(async(req, res, next) => {
+    console.log(req.body)
+    let newData ={
+        name:req.body.name,
+        price:req.body.price,
+        description:req.body.description,
+    }
+
+    let msg = 'product updated'
+    let product = await Product.findById(req.params.id);
+    if (!product) {
+        return res.status(401).send('Product not found')
+    }
+    // // // console.log("data",product)
+   
+
+    if (req.files) {
+        console.log("file",req.files)
+        const imageId = product.photo.id
+        console.log(imageId)
+        const respo = await cloudinary.uploader.destroy(imageId);
+        const result = await cloudinary.uploader.upload(req.files[0].path, {
+            folder: "FOOD-SANTA",
+            width: 150,
+            crop: "scale"
+        })
+        fs.unlinkSync(req.files[0].path)
+        // console.log(result)
+        req.body.photo = {
+            id: result.public_id,
+            secure_url: result.secure_url
+        }
+    }
+    console.log(req.body)
+
+    product = await Product.findByIdAndUpdate(req.params.id,req.body,{
+        new: true,
+        runValidators: true
+    })
+
+
+    console.log(product)
+    res.send(product)
+
+})
+
 
 exports.adminDeleteOneProduct = bigPromise(async(req, res, next) => {
     let product = await Product.findById(req.params.id);
     if (!product) {
         return res.status(401).send('Product not found')
     }
-    // rdestroy images
-    for (let index = 0; index < product.photos.length; index++) {
-        const res = await cloudinary.uploader.destroy(product.photos[index].id)
-    }
+   
+    const imageId = product.photo.id
+    await cloudinary.uploader.destroy(imageId);
     await product.remove()
-
     res.status(200).json({
         success: true,
         message: 'Product deleted'
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,12 +4,68 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>User</title>
     <link rel="stylesheet" href="/css/adminall.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="icon"  href="favicon.ico">
+  
+  
+  <style>
+
+
+/* CSS */
+.button-5 {
+  align-items: center;
+  background-clip: padding-box;
+  background-color: #fa6400;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.button-5:hover,
+.button-5:focus {
+  background-color: rgb(22, 194, 22);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.button-5:hover {
+  transform: translateY(-1px);
+}
+
+.button-5:active {
+  background-color: rgb(22, 194, 22);
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
+}
+.btn{
+  background-color:rgb(235, 41, 41)
+}
+</style>
 </head>
-<body>
+<body style="background-image:url('/img/bg.avif')">
     <table>
-        <caption>User Details</caption>
+        <caption style="color:white; font-weight:bold;">User Details</caption>
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -28,10 +84,13 @@
                     <td data-label="Due Date"><%=users[i].email  %> </td>
                     <td data-label="Amount"><%=users[i].phoneNo  %></td>
                     <td data-label="Period"><%=users[i].role  %> </td>
-                    <td data-label="Period"><%=users[i].photo.id  %></td>
+                    <td data-label="Period">
+                      <img src="<%=users[i].photo.secure_url  %>" alt="" srcset="" style="border-radius: 50%; height: 80px; width: 80px">
+                    </td>
                     <td>
-                        <a href="/api/v1/admin/user/<%=users[i]._id  %>  "><button>Delete</button></a>
-                        <a href="/api/v1/admin/user/?id=<%=users[i]._id  %> "><button>Update</button></a>
+                        <a href="/api/v1/admin/user?id=<%=users[i]._id  %>  "><button  class="button-5">update</button></a>
+                        
+                        <a class= "delete" data-id=<%=users[i]._id  %>><button class="button-5 btn">delete</button></a>
     
                     </td>
                 </tr>
@@ -40,6 +99,35 @@
 
         </tbody>
       </table>
-      <button>back</button>
+    <script>
+
+
+    if (window.location.pathname == '/api/v1/admin/users'){
+      $ondelete = $("table tbody td a.delete")
+      $ondelete.click(function(event){
+        var id = $(this).attr('data-id')
+        console.log(id)
+        let p= {
+          pro:window.location.protocol,
+          hostname:window.location.hostname,
+          port:window.location.port
+        }
+
+        let URL =`${window.location.origin}/api/v1/admin/user/${id}`
+        console.log(URL)
+
+        let request ={
+        'url':URL,
+        'method':'delete'
+      }
+      if(confirm('do you want delete ')){
+        $.ajax(request).done(function(){
+        alert("data delete successfully")
+        location.reload()
+      })
+      }
+      })
+    }
+    </script>
 </body>
 </html>

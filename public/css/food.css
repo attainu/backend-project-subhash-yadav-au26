@@ -41,14 +41,15 @@
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 20px;
-    width: 18vw;
-    /* height: 48vh; */
+    width: 17vw;
+    height: 47vh;
     /* background-color: orange; */
     border-radius: 8px;
     border: 1px solid black;
     display: flex;
     flex-direction: column;
     box-shadow: 10px 10px 5px grey;
+    flex-wrap: column;
     
 
 }
@@ -58,15 +59,20 @@
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     overflow: hidden;
+    display: flex;
+    flex-shrink: auto;
 }
 .img-p img{
-    height: 34vh;
-    width: 23vw;
+    height: 100%;
+    width: 100%;
 }
 .title-p{
     /* background-color: aqua; */
     /* height: 15vh; */
     height: auto;
+    /* display: flex;
+    flex-shrink: auto;
+    flex-direction: column; */
 }
 .btn1{
     height: 8vh;
@@ -75,6 +81,10 @@
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     padding-top: 5px;
+    display: flex;
+    flex-shrink: auto;
+    /* align-items: center; */
+    justify-content: center;
 }
 
 button{
@@ -86,6 +96,7 @@ button{
     background-color: black;
     font-weight: 500;
     margin-top: 10px;
+    font-size:auto
     
 }
 
@@ -102,6 +113,8 @@ button:hover{
     height: 5vh;
     margin-top: 2px;
     /* background-color: brown; */
+    flex-shrink: auto;
+    flex-wrap: column;
 }
 
 #rating{

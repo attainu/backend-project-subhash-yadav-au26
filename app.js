@@ -11,12 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // cookie and file middleware
 app.use(cookieParser());
-app.use(fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/temp/"
-}));
+// app.use(fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/temp/"
+// }));
 
 app.use(express.static('public'))
+app.use(express.static('image'))
 
 
 // ejs
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs')
 
 
 // morgan middleware
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 
 
 
@@ -76,18 +77,11 @@ app.get('/update',(req,res)=>{
 })
 
 
-app.get('/food',(req,res)=>{
-    
-})
 
 app.get('/cart',(req,res)=>{
+
     res.render('cart')
 })
-
-
-
-
-
 
 
 

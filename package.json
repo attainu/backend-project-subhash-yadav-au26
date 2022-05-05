@@ -4,20 +4,20 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "node index.js",
+        "start": "node index.js",
         "watch": "nodemon index.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/pragyanshu-panda-au26/Food-Santa.git"
+        "url": "none"
     },
     "keywords": [],
-    "author": "",
+    "author": "subhash",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/pragyanshu-panda-au26/Food-Santa/issues"
+        "url": "https://github.com/subhash-yadav-au26/food-santa"
     },
-    "homepage": "https://github.com/pragyanshu-panda-au26/Food-Santa#readme",
+    "homepage": "https://github.com/subhash-yadav-au26/",
     "dependencies": {
         "axios": "^0.27.2",
         "bcryptjs": "^2.4.3",
@@ -31,6 +31,7 @@
         "lodash": "^4.17.21",
         "mongoose": "^6.2.10",
         "morgan": "^1.10.0",
+        "multer": "^1.4.4",
         "nodemailer": "^6.7.3",
         "nodemon": "^2.0.15",
         "stripe": "^8.219.0",
